@@ -37,7 +37,7 @@ def parse_movie(doc):
   print(score_str)
 
   actors = html.find('#info > span.actor > span.attrs')[0].find('a')
-  actor_list = [actor.attrs['href'] for actor in actors]
+  actor_list = [(actor.attrs['href'], actor.text.split()[0]) for actor in actors]
   print(actor_list)
 
 def main():
