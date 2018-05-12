@@ -12,7 +12,7 @@ string = '''
 </div>
 '''
 def main():
-  with open("html/top250.0.html") as file:
+  with open("../html/top250.0.html") as file:
     raw_data = file.read()
     soup = BeautifulSoup(raw_data, "lxml")
     body = soup.body
