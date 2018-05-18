@@ -1,76 +1,84 @@
--- --1 
--- --2
--- drop view if EXISTS  young_actor;
--- go
--- create view young_actor
--- as
---   select *
---   from actor
---   where byear >= 1990 and byear < 2000;
--- go
--- --3
--- --4
--- drop table if EXISTS dup;
--- create table dup
--- (
---   id int
--- );
--- insert into dup
--- values
---   (1),
---   (1)
--- select *
--- from dup;
--- go
--- -- create view actor80 as 
--- --   select actid, aname, byear, movie_count, max_score 
--- --   from actor left join (
--- --     select actid, count(*) as movie_count, max(grade) as max_score from actin
--- --     where isleading = 'Y' 
--- --     group by actid
--- --   )
--- -- create view actor80
--- drop view if EXISTS actor80;
--- go
--- create view actor80
--- as
---   select actor.actid, aname, sex, byear, movie_count, max_score
---   from actor left join (select actid, count(fid) as movie_count, max(grade) as max_score
---     from actin
---     where isleading = 'Y'
---     group by actid) as tmp on actor.actid=tmp.actid
---   where byear >= 1980 and byear < 1990;
---   go
--- select *
--- from actor80
--- go
-select *
-from film where dname = '周星驰';
+--1 
+----see createTable.sql
+--2
+drop table if EXISTS young_actor;
+create table young_actor
+(
+  actid int primary key,
+  aname char(30),
+  sex char(2),
+  byear int,
+  CONSTRAINT RG_YA_SEX check (sex in ('男', '女'))
+);
 go
--- create TRIGGER zxc_commedy
--- on film
--- for insert 
--- as 
--- begin
---   update on inserted
---   set ftype
---   ='喜剧' where newTuple.dname = '周星驰'
--- -- if (newTuple.dname = '周星驰')
--- -- then newTuple.ftype = '喜剧'
--- end
--- when dname='周星驰'
--- begin 
--- end
+insert into young_actor
+select *
+from actor
+where byear >= 1990 and byear < 2000
+;
+select *
+from young_actor;
+go
+--3
+---- use cmd instead of SQL lang. ignored
+--4
+drop table if EXISTS dup;
+create table dup
+(
+  id int
+);
+insert into dup
+values
+  (1),
+  (1)
+select *
+from dup;
+go
+----- observation: have duplicated tuples in table.
+delete from dup where id=1;
+select *
+from dup;
+go
+----- obsevation: two tuples are both deleted
+-- 5
+drop view if EXISTS actor80;
+go
+create view actor80
+as
+  select actor.actid, aname, sex, byear, movie_count, max_score
+  from actor left join (select actid, count(fid) as movie_count, max(grade) as max_score
+    from actin
+    where isleading = 'Y'
+    group by actid) as tmp on actor.actid=tmp.actid
+  where byear >= 1980 and byear < 1990;
+  go
+select *
+from actor80
+go
+select *
+from film
+where dname = '周星驰';
+go
+-- 6
+drop trigger if exists zxc_commedy;
+go
 create trigger zxc_commedy
 on film
 after
 insert
 as
 update film set ftype = '喜剧' where dname = '周星驰' and exists(
-  select * from inserted where inserted.fid = film.fid
+  select *
+  from inserted
+  where inserted.fid = film.fid
 );
 go
-insert into film(fid, fname, dname) values ('2333', 'cry', '周星驰');
-select * from film where dname = '周星驰';
+insert into film
+  (fid, fname, dname)
+values
+  ('2333', 'cry', '周星驰');
+select *
+from film
+where dname = '周星驰';
 go
 
