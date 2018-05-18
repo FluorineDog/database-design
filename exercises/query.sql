@@ -61,11 +61,20 @@ select dname, actor.actid, aname
 from film, actin, actor
 where dname in 
 (select dname as film_count
-from film
-group by dname
-having count(fid) >= 2
-) 
-and actin.actid = actor.actid 
+  from film
+  group by dname
+  having count(fid) >= 2
+) and actin.actid = actor.actid 
 go
-
 -- 10
+select actid, avg(grade) as avg_grade
+from actin
+where isleading = 'Y'
+group by actid
+go
+-- 11
+
+
+-- select fid, year, month from show
+-- group by fid
+-- order by year asc, month asc

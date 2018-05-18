@@ -98,7 +98,6 @@ insert into actor  values
 ('22','余男','女','1978'),
 ('999','吴肇敏','男','1998')
 go
-select * from actin;
 insert into actin values
 ('1','1','Y','81'),
 ('2','1','Y','72'),
@@ -783,6 +782,7 @@ insert into show values
 ('12','52','50','2006','6'),
 ('12','53','70','2006','6'),
 ('12','54','80','2006','6')
+select * from actin;
 
 insert into theater values
 ('1','金逸国际影城南湖店','洪山区','武昌区丁字桥南路518号南国南湖城市广场3楼'),
